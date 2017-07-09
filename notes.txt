@@ -1,0 +1,5 @@
+PyCharm configuration for Scrapy:
+Script: C:\Miniconda2\envs\pythoshka36\Lib\site-packages\scrapy\cmdline.py
+Script parameters: crawl flyer01
+Working directory: PROJECT (check)
+! Check "Show command line afterwards" !

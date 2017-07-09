@@ -1,0 +1,4 @@
+Django==1.10.7
+scrapy==1.4.0
+scrapy-fake-useragent==1.0.4.1
+scrapy-splash==0.7.2
