@@ -10,5 +10,7 @@ import scrapy
 
 class Product(scrapy.Item):
     # define the fields for your item here like:
+    groupName = scrapy.Field()
+    groupPage = scrapy.Field()
     name = scrapy.Field()
-    link = scrapy.Field()
+    page = scrapy.Field()

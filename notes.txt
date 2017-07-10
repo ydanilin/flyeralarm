@@ -3,3 +3,14 @@ Script: C:\Miniconda2\envs\pythoshka36\Lib\site-packages\scrapy\cmdline.py
 Script parameters: crawl flyer01
 Working directory: PROJECT (check)
 ! Check "Show command line afterwards" !
+To export run/debug configurations:
+1. locate and open workspace.xml in .idea project folder
+2. copy the section <component name="RunManager" and transfer this to another
+machine
+
+the difference is /text() for specific tag text and //text() for text of
+ specific tag as well as its children tags
+https://stackoverflow.com/questions/13489473/how-can-i-extract-only-text-in-scrapy-selector-in-python
+
+It's better to hook on id's
+to list all id's, in browser console do: $x('//*[@id]')
