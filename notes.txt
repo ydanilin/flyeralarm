@@ -14,3 +14,6 @@ https://stackoverflow.com/questions/13489473/how-can-i-extract-only-text-in-scra
 
 It's better to hook on id's
 to list all id's, in browser console do: $x('//*[@id]')
+
+different font size for console output PyCharm:
+Editor - Colors & Fonts - Console Font

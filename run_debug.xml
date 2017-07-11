@@ -1,4 +1,4 @@
-  <component name="RunManager" selected="Python.parse_group">
+  <component name="RunManager" selected="Python.parse_product">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -150,6 +150,23 @@
       <option name="SHOW_COMMAND_LINE" value="true" />
       <method />
     </configuration>
+    <configuration default="false" name="Spider limited" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Program Files (x86)\Miniconda2\envs\thomas\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="flyeralarm" />
+      <option name="SCRIPT_NAME" value="C:/Program Files (x86)/Miniconda2/envs/thomas/Lib/site-packages/scrapy/cmdline.py" />
+      <option name="PARAMETERS" value="crawl flyer01 -s CLOSESPIDER_ITEMCOUNT=4" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <method />
+    </configuration>
     <configuration default="false" name="parse_product" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -163,7 +180,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="flyeralarm" />
       <option name="SCRIPT_NAME" value="C:/Program Files (x86)/Miniconda2/envs/thomas/Lib/site-packages/scrapy/cmdline.py" />
-      <option name="PARAMETERS" value="parse --spider=flyer01 -c parse_item -d 2 https://www.flyeralarm.com/uk/shop/configurator/index/id/5643/wrist-band-tongs.html" />
+      <option name="PARAMETERS" value="parse --spider=flyer01 -c parse_group -d 2 https://www.flyeralarm.com/uk/shop/configurator/index/id/6599/zippo.html" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <method />
     </configuration>
@@ -184,9 +201,10 @@
       <option name="SHOW_COMMAND_LINE" value="true" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.Spider" />
-      <item index="1" class="java.lang.String" itemvalue="Python.parse_product" />
-      <item index="2" class="java.lang.String" itemvalue="Python.parse_group" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Spider limited" />
+      <item index="2" class="java.lang.String" itemvalue="Python.parse_product" />
+      <item index="3" class="java.lang.String" itemvalue="Python.parse_group" />
     </list>
   </component>

@@ -19,7 +19,9 @@ class Flyer01Spider(CrawlSpider):
         isProduct = response.xpath('(//div[@id="shopWrapper"])[1]')
         if isProduct:
             print('Eto product')
-            self.parse_details(response)
+            from scrapy.shell import inspect_response
+            inspect_response(response, self)
+            yield self.parse_details(response)
             # return item
 
         # if div class="contentProducts" - this is group page
@@ -34,10 +36,7 @@ class Flyer01Spider(CrawlSpider):
                     link = div.xpath('.//a[1]/@href').extract_first()
                     request = scrapy.Request(response.urljoin(link),
                                              callback=self.parse_details)
-                    return request
-
-        from scrapy.shell import inspect_response
-        inspect_response(response, self)
+                    yield request
 
     def parse_details(self, response):
         item = Product()
@@ -45,19 +44,14 @@ class Flyer01Spider(CrawlSpider):
         bread = response.css('nav.breadcrumbs')
         if bread:
             a = bread.xpath('(.//a)[last()]')
-            groupName = a.xpath('./@title').extract_first().strip()
-            groupPage = a.xpath('./@href').extract_first().strip()
-            item['groupName'] = groupName
-            item['groupPage'] = response.urljoin(groupPage)
+            if a:
+                groupName = a.xpath('./@title').extract_first().strip()
+                groupPage = a.xpath('./@href').extract_first().strip()
+                if groupName != 'Start':
+                    item['groupName'] = groupName
+                    item['groupPage'] = response.urljoin(groupPage)
         # process name
         name = response.css('h1.productName').xpath('./text()').extract_first().strip()
         item['name'] = name
         item['page'] = response.url
-
-        print(item['groupName'])
-        print(item['groupPage'])
-        print(item['name'])
-        print(item['page'])
-        from scrapy.shell import inspect_response
-        inspect_response(response, self)
-
+        return item
