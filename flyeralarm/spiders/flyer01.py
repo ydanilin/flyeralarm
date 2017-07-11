@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import re
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from ..items import Product
+from scrapy.shell import inspect_response
 
 
 class Flyer01Spider(CrawlSpider):
@@ -19,11 +21,7 @@ class Flyer01Spider(CrawlSpider):
         isProduct = response.xpath('(//div[@id="shopWrapper"])[1]')
         if isProduct:
             print('Eto product')
-            from scrapy.shell import inspect_response
-            inspect_response(response, self)
             yield self.parse_details(response)
-            # return item
-
         # if div class="contentProducts" - this is group page
         # section#openPage
         isGroup = response.css('div.contentProducts')
@@ -39,7 +37,9 @@ class Flyer01Spider(CrawlSpider):
                     yield request
 
     def parse_details(self, response):
+
         item = Product()
+        # TODO extract SKU
         # process breadcrumbs
         bread = response.css('nav.breadcrumbs')
         if bread:
@@ -54,4 +54,20 @@ class Flyer01Spider(CrawlSpider):
         name = response.css('h1.productName').xpath('./text()').extract_first().strip()
         item['name'] = name
         item['page'] = response.url
+        # go for ajax
+        attrs = response.xpath('//li[contains(@id, "productgroupAttribute")]')
+        for attr in attrs:
+            aName = ' '.join(attr.xpath('./text()').extract_first().split())
+            aName = aName[aName.index(' ')+1:]
+            print(aName)
+
+        avDivs = response.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]')
+        for a in avDivs:
+            # inspect_response(response, self)
+            av = a.xpath('./@onclick').extract_first()
+            # (sku, attrID, valueID)
+            avl = re.findall("\d+", av[av.index('(')+1:av.index(')')])
+            print(avl)
+            huj = a.css('div.attributeValueNameText').xpath('./text()').extract_first().strip()
+            print(huj)
         return item
