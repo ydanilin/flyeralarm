@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import json
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
@@ -37,19 +38,9 @@ class Flyer01Spider(CrawlSpider):
                     yield request
 
     def parse_details(self, response):
-
+        # https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html
         item = Product()
         # TODO extract SKU
-        # process breadcrumbs
-        bread = response.css('nav.breadcrumbs')
-        if bread:
-            a = bread.xpath('(.//a)[last()]')
-            if a:
-                groupName = a.xpath('./@title').extract_first().strip()
-                groupPage = a.xpath('./@href').extract_first().strip()
-                if groupName != 'Start':
-                    item['groupName'] = groupName
-                    item['groupPage'] = response.urljoin(groupPage)
         # process name
         name = response.css('h1.productName').xpath('./text()').extract_first().strip()
         item['name'] = name
@@ -57,17 +48,34 @@ class Flyer01Spider(CrawlSpider):
         # go for ajax
         attrs = response.xpath('//li[contains(@id, "productgroupAttribute")]')
         for attr in attrs:
+            # attribute name
             aName = ' '.join(attr.xpath('./text()').extract_first().split())
             aName = aName[aName.index(' ')+1:]
-            print(aName)
-
+            # print(aName)
+        # attribute possible values
         avDivs = response.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]')
         for a in avDivs:
             # inspect_response(response, self)
             av = a.xpath('./@onclick').extract_first()
             # (sku, attrID, valueID)
             avl = re.findall("\d+", av[av.index('(')+1:av.index(')')])
-            print(avl)
+            sku, aCode, aValCode = avl
+            print(sku, aCode, aValCode)
+            # attribute value
             huj = a.css('div.attributeValueNameText').xpath('./text()').extract_first().strip()
             print(huj)
+            goNextAttr = '/uk/shop/configurator/selectattribute/id/{0}/width/0/height/0/{1}/{2}'.format(sku, aCode, aValCode)
+            # goNextAttr = response.urljoin(goNextAttr)
+            # print(goNextAttr)
+            r = scrapy.Request(response.urljoin(goNextAttr), callback=self.parse_nextAttr)
+            yield r
         return item
+
+    def parse_nextAttr(self, response):
+        html = json.loads(response.body)['configuratorContent']
+        html = '<html><body>' + html + '</body></html>'
+        sel = scrapy.selector.Selector(text=html)
+        attrs = sel.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]/@onclick').extract()
+        print(attrs)
+        inspect_response(response, self)
+
