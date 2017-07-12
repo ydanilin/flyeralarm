@@ -40,42 +40,58 @@ class Flyer01Spider(CrawlSpider):
     def parse_details(self, response):
         # https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html
         item = Product()
+        print('parse_details')
         # TODO extract SKU
         # process name
         name = response.css('h1.productName').xpath('./text()').extract_first().strip()
         item['name'] = name
         item['page'] = response.url
-        # go for ajax
+        # go for attrs
         attrs = response.xpath('//li[contains(@id, "productgroupAttribute")]')
+        attribOnPage = True
         for attr in attrs:
-            # attribute name
-            aName = ' '.join(attr.xpath('./text()').extract_first().split())
-            aName = aName[aName.index(' ')+1:]
-            # print(aName)
-        # attribute possible values
-        avDivs = response.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]')
-        for a in avDivs:
-            # inspect_response(response, self)
-            av = a.xpath('./@onclick').extract_first()
-            # (sku, attrID, valueID)
-            avl = re.findall("\d+", av[av.index('(')+1:av.index(')')])
-            sku, aCode, aValCode = avl
-            print(sku, aCode, aValCode)
-            # attribute value
-            huj = a.css('div.attributeValueNameText').xpath('./text()').extract_first().strip()
-            print(huj)
-            goNextAttr = '/uk/shop/configurator/selectattribute/id/{0}/width/0/height/0/{1}/{2}'.format(sku, aCode, aValCode)
-            # goNextAttr = response.urljoin(goNextAttr)
-            # print(goNextAttr)
-            r = scrapy.Request(response.urljoin(goNextAttr), callback=self.parse_nextAttr)
-            yield r
-        return item
+            aName = self.attributeName(attr)
+            if 'delivery' in aName.lower():
+                break
+            if attribOnPage:
+                attribOnPage = False
+                values = self.parse_attrib_values(response)
+                goNextAttr = ('/uk/shop/configurator/selectattribute'
+                              '/id/{0}/width/0/height/0').format(values[-1]['sku'])
+                print('first call', values, 'next url:', goNextAttr)
+            else:
+                goNextAttr += '/{0}/{1}'.format(values[-1]['attrNameID'],
+                                                values[-1]['attrValueID'])
+                r = scrapy.Request(response.urljoin(goNextAttr),
+                                   callback=self.parse_nextAttr)
+                yield r
+                print('next call', values, 'next url:', goNextAttr)
 
     def parse_nextAttr(self, response):
         html = json.loads(response.body)['configuratorContent']
         html = '<html><body>' + html + '</body></html>'
         sel = scrapy.selector.Selector(text=html)
-        attrs = sel.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]/@onclick').extract()
-        print(attrs)
-        inspect_response(response, self)
+        values = self.parse_attrib_values(sel)
+        # print('next call', values)
+        yield values
+        # inspect_response(response, self)
 
+    def parse_attrib_values(self, response):
+        output = []
+        valueDivs = response.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]')
+        for valueDiv in valueDivs:
+            valueName = valueDiv.css('div.attributeValueNameText').xpath('./text()').extract_first().strip()
+            jsProcName = valueDiv.xpath('./@onclick').extract_first()
+            # (sku, attrID, valueID)
+            jsProcArgs = re.findall("\d+", jsProcName)
+            output.append(dict(sku=jsProcArgs[0],
+                               attrNameID=jsProcArgs[1],
+                               attrValueID=jsProcArgs[2],
+                               valueName=valueName)
+                          )
+        return output
+
+    def attributeName(self, aTag):
+        name = ' '.join(aTag.xpath('./text()').extract_first().split())
+        name = name[name.index(' ') + 1:]
+        return name
