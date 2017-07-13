@@ -4,7 +4,7 @@ import json
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from ..items import Product
+from ..items import Product, Parameter
 from scrapy.shell import inspect_response
 
 
@@ -39,41 +39,50 @@ class Flyer01Spider(CrawlSpider):
 
     def parse_details(self, response):
         # https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html
-        item = Product()
-        print('parse_details')
-        # TODO extract SKU
-        # process name
-        name = response.css('h1.productName').xpath('./text()').extract_first().strip()
-        item['name'] = name
-        item['page'] = response.url
-        # go for attrs
-        attrs = response.xpath('//li[contains(@id, "productgroupAttribute")]')
-        attribOnPage = True
-        for attr in attrs:
-            aName = self.attributeName(attr)
-            if 'delivery' in aName.lower():
-                break
-            if attribOnPage:
-                attribOnPage = False
-                values = self.parse_attrib_values(response)
-                goNextAttr = ('/uk/shop/configurator/selectattribute'
-                              '/id/{0}/width/0/height/0').format(values[-1]['sku'])
-                print('first call', values, 'next url:', goNextAttr)
-            else:
-                goNextAttr += '/{0}/{1}'.format(values[-1]['attrNameID'],
-                                                values[-1]['attrValueID'])
-                r = scrapy.Request(response.urljoin(goNextAttr),
-                                   callback=self.parse_nextAttr)
-                yield r
-                print('next call', values, 'next url:', goNextAttr)
+        item = response.meta.get('item')
+        isRecursive = response.meta.get('isRecursive', False)
+        if not item:
+            # page is visited first time
+            item = Product()
+            name = response.css('h1.productName').xpath(
+                './text()').extract_first().strip()
+            item['name'] = name
+            item['URL'] = response.url
+            item['parameters'] = []
+        # if subsequent requests, pull cAttrDiv from json
+        if isRecursive:
+            html = json.loads(response.body)['configuratorContent']
+            html = '<html><body>' + html + '</body></html>'
+            replacedResp = scrapy.selector.Selector(text=html)
+        else:
+            replacedResp = response
+        cAttrDiv = replacedResp.xpath('(//div[@id="currentAttribute"])[1]')
+        # termination condition
+        if not cAttrDiv:
+            yield item
+            return
+        aName = self.attributeName(cAttrDiv)
+        print(aName)
+        item['parameters'].append(dict(name=aName))
+        values = self.parse_attrib_values(replacedResp)
+        print(values)
+        for value in values:
+            item['parameters'][-1]['data'] = value['attrNameID']
+        if not isRecursive:
+            response.meta['goNextAttr'] = ('/uk/shop/configurator'
+                                           '/selectattribute'
+                                           '/id/{0}/width/0/height/0').format(
+                values[-1]['sku'])
 
-    def parse_nextAttr(self, response):
-        html = json.loads(response.body)['configuratorContent']
-        html = '<html><body>' + html + '</body></html>'
-        sel = scrapy.selector.Selector(text=html)
-        values = self.parse_attrib_values(sel)
-        # print('next call', values)
-        yield values
+        goNextAttr = response.meta['goNextAttr'] + '/{0}/{1}'.format(values[-1]['attrNameID'],
+                                                                     values[-1]['attrValueID'])
+        print(goNextAttr)
+        request = scrapy.Request(response.urljoin(goNextAttr),
+                                 callback=self.parse_details)
+        request.meta['item'] = item
+        request.meta['isRecursive'] = True
+        request.meta['goNextAttr'] = goNextAttr
+        yield request
         # inspect_response(response, self)
 
     def parse_attrib_values(self, response):
@@ -92,6 +101,13 @@ class Flyer01Spider(CrawlSpider):
         return output
 
     def attributeName(self, aTag):
-        name = ' '.join(aTag.xpath('./text()').extract_first().split())
-        name = name[name.index(' ') + 1:]
-        return name
+        output = ''
+        tryTag = aTag.xpath('.//div[@id="selectedAttributeHeader"]/*[1]/text()')
+        # tryTag = aTag.xpath('.//h3[1]/text()')
+        if tryTag:
+            output = ' '.join(aTag.xpath('.//div[@id="selectedAttributeHeader"]/*[1]/text()').extract_first().split())
+            output = output[output.index(' ') + 1:]
+        else:
+            # log that's no attribute name
+            pass
+        return output
