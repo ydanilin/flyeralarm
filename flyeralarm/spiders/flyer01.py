@@ -4,7 +4,7 @@ import json
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from ..items import Product, Parameter
+from ..items import ProductItem, AttribItem, ValueItem
 from scrapy.shell import inspect_response
 
 
@@ -21,13 +21,9 @@ class Flyer01Spider(CrawlSpider):
         # if div id="shopWrapper" - this is an individual product page
         isProduct = response.xpath('(//div[@id="shopWrapper"])[1]')
         if isProduct:
-            print('Eto product')
             yield self.parse_details(response)
-        # if div class="contentProducts" - this is group page
-        # section#openPage
         isGroup = response.css('div.contentProducts')
         if isGroup:
-            print('Eto gruppa')
             group = isGroup.xpath('following-sibling::div[1]')
             if group:
                 # extracts links to individual product pages within the category
@@ -41,14 +37,13 @@ class Flyer01Spider(CrawlSpider):
         # https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html
         item = response.meta.get('item')
         isRecursive = response.meta.get('isRecursive', False)
-        if not item:
-            # page is visited first time
-            item = Product()
+        if not item:  # page is visited first time
             name = response.css('h1.productName').xpath(
                 './text()').extract_first().strip()
-            item['name'] = name
-            item['URL'] = response.url
-            item['parameters'] = []
+            url = response.url
+            sku = re.search(r'\d+', url)
+            item = ProductItem(dict(name=name, URL=url, data=sku.group(),
+                                    parameters=[]))
         # if subsequent requests, pull cAttrDiv from json
         if isRecursive:
             html = json.loads(response.body)['configuratorContent']
@@ -61,13 +56,18 @@ class Flyer01Spider(CrawlSpider):
         if not cAttrDiv:
             yield item
             return
-        aName = self.attributeName(cAttrDiv)
-        print(aName)
-        item['parameters'].append(dict(name=aName))
-        values = self.parse_attrib_values(replacedResp)
-        print(values)
+        aName = self.parseAttributeName(cAttrDiv)
+        ai = AttribItem(dict(name=aName,
+                             data=values[-1]['attrNameID'],
+                             values=[]))
+        item['parameters'].append(ai)
+        values = self.parseAttributeValues(replacedResp)
         for value in values:
-            item['parameters'][-1]['data'] = value['attrNameID']
+            vi = ValueItem(dict(name=value['valueName'],
+                                data=value['attrValueID'])
+                           )
+            ai['values'].append(vi)
+
         if not isRecursive:
             response.meta['goNextAttr'] = ('/uk/shop/configurator'
                                            '/selectattribute'
@@ -85,7 +85,7 @@ class Flyer01Spider(CrawlSpider):
         yield request
         # inspect_response(response, self)
 
-    def parse_attrib_values(self, response):
+    def parseAttributeValues(self, response):
         output = []
         valueDivs = response.xpath('//div[contains(@onclick, "selectShoppingCartAttribute")]')
         for valueDiv in valueDivs:
@@ -100,7 +100,7 @@ class Flyer01Spider(CrawlSpider):
                           )
         return output
 
-    def attributeName(self, aTag):
+    def parseAttributeName(self, aTag):
         output = ''
         tryTag = aTag.xpath('.//div[@id="selectedAttributeHeader"]/*[1]/text()')
         # tryTag = aTag.xpath('.//h3[1]/text()')

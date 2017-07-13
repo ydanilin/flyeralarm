@@ -1,0 +1,72 @@
+[
+  {
+    "URL": "https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html",
+    "name": "Loyalty cards",
+    "parameters": [
+      {
+        "data": "3240",
+        "name": "Format",
+        "values": [
+          {
+            "data": "16637",
+            "name": "Loyalty cards"
+          },
+          {
+            "data": "16645",
+            "name": "Folded loyalty cards"
+          }
+        ]
+      },
+      {
+        "data": "3241",
+        "name": "Style",
+        "values": [
+          {
+            "data": "16646",
+            "name": "Portrait, folding on the long side (8.5 cm x 5.5 cm)"
+          },
+          {
+            "data": "16647",
+            "name": "Landscape, folding on the long side (8.5 cm x 5.5 cm)"
+          },
+          {
+            "data": "16648",
+            "name": "Portrait, folding on the narrow side (5.5 cm x 8.5 cm)"
+          },
+          {
+            "data": "16649",
+            "name": "Landscape, folding on the narrow side (8.5 cm x 5.5 cm)"
+          }
+        ]
+      },
+      {
+        "data": "3242",
+        "name": "Material",
+        "values": [
+          {
+            "data": "16639",
+            "name": "170gsm recycled paper"
+          },
+          {
+            "data": "16650",
+            "name": "300gsm recycled paper"
+          },
+          {
+            "data": "16651",
+            "name": "300gsm natural off-white paper"
+          }
+        ]
+      },
+      {
+        "data": "3243",
+        "name": "Colour Mode",
+        "values": [
+          {
+            "data": "16640",
+            "name": "4/4 double sided print(full colour)"
+          }
+        ]
+      }
+    ]
+  }
+]
