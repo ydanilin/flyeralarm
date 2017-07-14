@@ -4,4 +4,7 @@
 __pycache__/*
 # PyCharm data, in all subfolders
 .idea/
+# Scrapy HTTP cache files
+.scrapy/
+
 

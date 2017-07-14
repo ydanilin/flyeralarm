@@ -3,6 +3,7 @@ Script: C:\Miniconda2\envs\pythoshka36\Lib\site-packages\scrapy\cmdline.py
 Script parameters: crawl flyer01
 Working directory: PROJECT (check)
 ! Check "Show command line afterwards" !
+
 To export run/debug configurations:
 1. locate and open workspace.xml in .idea project folder
 2. copy the section <component name="RunManager" and transfer this to another
@@ -17,3 +18,17 @@ to list all id's, in browser console do: $x('//*[@id]')
 
 different font size for console output PyCharm:
 Editor - Colors & Fonts - Console Font
+
+Error at:
+https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/6175/width/0/height/0/3556/17953
+attributeValueNameText
+attributeValueListNameText
+
+how to control if repeated attributes
+
+-s CLOSESPIDER_ITEMCOUNT=200  # maximum items
+-s LOG_LEVEL=INFO             # supress escessive verbosity
+-s HTTPCACHE_ENABLED=1        # save in local cache - useful for next runs!
+-s LOGSTATS_INTERVAL=10       # provide progress message every X seconds
+
+parse --spider=<name> -c <callback name> -d <depth?> <url to parse>

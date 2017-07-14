@@ -30,7 +30,7 @@ class Flyer01Spider(CrawlSpider):
                 for div in group.xpath('div'):
                     link = div.xpath('.//a[1]/@href').extract_first()
                     request = scrapy.Request(response.urljoin(link),
-                                             callback=self.parse_details)
+                                             callback=self.parse_group)
                     yield request
 
     def parse_details(self, response):
@@ -57,8 +57,8 @@ class Flyer01Spider(CrawlSpider):
         # common part for both types of calls
         cAttrDiv = replacedResp.xpath('(//div[@id="currentAttribute"])[1]')
         if not cAttrDiv:  # termination condition
-            yield item
-            return
+            return item
+            # return
         values = self.parseAttributeValues(replacedResp)
         aName = self.parseAttributeName(cAttrDiv)
         ai = AttribItem(dict(name=aName,
@@ -78,23 +78,39 @@ class Flyer01Spider(CrawlSpider):
         request.meta['item'] = item
         request.meta['isRecursive'] = True
         request.meta['goNextAttr'] = goNextAttr
-        yield request
+        return request
         # inspect_response(response, self)
 
     def parseAttributeValues(self, response):
         output = []
-        valueDivs = response.xpath(
-            '//div[contains(@onclick, "selectShoppingCartAttribute")]')
-        for valueDiv in valueDivs:
-            valueName = valueDiv.css('div.attributeValueNameText'
-                                     ).xpath('./text()').extract_first().strip()
-            jsProcName = valueDiv.xpath('./@onclick').extract_first()
-            # (sku, attrID, valueID)
-            jsProcArgs = re.findall("\d+", jsProcName)
-            output.append(dict(sku=jsProcArgs[0],
-                               attrNameID=jsProcArgs[1],
-                               attrValueID=jsProcArgs[2],
-                               valueName=valueName))
+        valueDivs = []
+        containerDiv = response.xpath('//div[@id = "attributeValues"]')
+        if containerDiv:
+            # every value block may be of class either "attributeValueContainer"
+            # of "attributeValueList"
+            # also value text div class depends on it
+            tryRecordClass = containerDiv.css('div.attributeValueContainer')
+            if tryRecordClass:
+                valueDivs = tryRecordClass
+                valueTextClassName = "attributeValueNameText"
+            else:
+                tryRecordClass = containerDiv.css('div.attributeValueList')
+                if tryRecordClass:
+                    valueDivs = tryRecordClass
+                    valueTextClassName = "attributeValueListNameText"
+
+            for valueDiv in valueDivs:
+                valueName = valueDiv.xpath('.//div[@class = $var]/text()',
+                                           var=valueTextClassName).\
+                    extract_first().strip()
+                jsProcName = valueDiv.xpath(
+                    ('.//div[contains(@onclick, "selectShoppingCartAttribute")]'
+                     '/@onclick')).extract_first()
+                jsProcArgs = re.findall("\d+", jsProcName)
+                output.append(dict(sku=jsProcArgs[0],
+                                   attrNameID=jsProcArgs[1],
+                                   attrValueID=jsProcArgs[2],
+                                   valueName=valueName))
         return output
 
     def parseAttributeName(self, aTag):

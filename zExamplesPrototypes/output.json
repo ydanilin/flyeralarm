@@ -1,69 +1,52 @@
 [
   {
-    "URL": "https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html",
-    "name": "Loyalty cards",
+    "URL": "https://www.flyeralarm.com/uk/shop/configurator/index/id/6175",
+    "data": "6175",
+    "name": "Champagne glasses",
     "parameters": [
       {
-        "data": "3240",
-        "name": "Format",
-        "values": [
-          {
-            "data": "16637",
-            "name": "Loyalty cards"
-          },
-          {
-            "data": "16645",
-            "name": "Folded loyalty cards"
-          }
-        ]
-      },
-      {
-        "data": "3241",
+        "data": "3556",
         "name": "Style",
         "values": [
           {
-            "data": "16646",
-            "name": "Portrait, folding on the long side (8.5 cm x 5.5 cm)"
+            "data": "17947",
+            "name": "basic"
           },
           {
-            "data": "16647",
-            "name": "Landscape, folding on the long side (8.5 cm x 5.5 cm)"
+            "data": "17951",
+            "name": "standard"
           },
           {
-            "data": "16648",
-            "name": "Portrait, folding on the narrow side (5.5 cm x 8.5 cm)"
+            "data": "17952",
+            "name": "modern"
           },
           {
-            "data": "16649",
-            "name": "Landscape, folding on the narrow side (8.5 cm x 5.5 cm)"
+            "data": "17953",
+            "name": "premium"
           }
         ]
       },
       {
-        "data": "3242",
-        "name": "Material",
+        "data": "3557",
+        "name": "Number of Colours",
         "values": [
           {
-            "data": "16639",
-            "name": "170gsm recycled paper"
-          },
-          {
-            "data": "16650",
-            "name": "300gsm recycled paper"
-          },
-          {
-            "data": "16651",
-            "name": "300gsm natural off-white paper"
+            "data": "17948",
+            "name": "1 colour"
           }
         ]
       },
       {
-        "data": "3243",
-        "name": "Colour Mode",
+        "data": "3558",
+        "name": "Measuring Line",
         "values": [
           {
-            "data": "16640",
-            "name": "4/4 double sided print(full colour)"
+            "data": "17949",
+            "name": "without measuring line"
+          },
+          {
+            "data": "17950",
+            "name": "0.1 l"
           }
         ]
       }
