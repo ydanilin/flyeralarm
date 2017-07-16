@@ -18,14 +18,18 @@ class Flyer01Spider(CrawlSpider):
         Rule(LinkExtractor(restrict_css='div.productoverviewaz'), callback='parse_group'),
     )
 
+    def __init__(self, *args, **kwargs):
+        super(Flyer01Spider, self).__init__(*args, **kwargs)
+        self.nextTemplate = ('/uk/shop/configurator/selectattribute'
+                             '/id/{0}/width/0/height/0')
+
     def parse_group(self, response):
-        # if div id="shopWrapper" - this is an individual product page
         isProduct = response.xpath('(//div[@id="shopWrapper"])[1]')
+        isGroup = response.xpath('(//section[@id="openPage"])[1]')
         if isProduct:
             yield self.parse_details(response)
-        isGroup = response.css('div.contentProducts')
-        if isGroup:
-            group = isGroup.xpath('following-sibling::div[1]')
+        elif isGroup:
+            group = isGroup.xpath('.//div[@class="row"]')
             if group:
                 # extracts links to individual product pages within the category
                 for div in group.xpath('div'):
@@ -33,6 +37,8 @@ class Flyer01Spider(CrawlSpider):
                     request = scrapy.Request(response.urljoin(link),
                                              callback=self.parse_group)
                     yield request
+        else:
+            print('Bad index page: neither prod nor group detected', response.url)
 
     def parse_details(self, response):
         # https://www.flyeralarm.com/uk/shop/configurator/index/id/6009/loyalty-cards.html
@@ -49,16 +55,13 @@ class Flyer01Spider(CrawlSpider):
                                     data=sku.group(),
                                     parameters=[])
                                )
-            response.meta['goNextAttr'] = ('/uk/shop/configurator'
-                                           '/selectattribute'
-                                           '/id/{0}/width/0/height/0').format(
-                item['data'])
+            response.meta['goNextAttr'] = self.nextTemplate.format(item['data'])
             replacedResp = response
         else:  # if subsequent requests, pull cAttrDiv from json
+            item = response.meta.get('item')
             html = json.loads(response.body)['configuratorContent']
             html = '<html><body>' + html + '</body></html>'
             replacedResp = scrapy.selector.Selector(text=html)
-            item = response.meta.get('item')
 
         # common part for both types of calls
         cAttrDiv = replacedResp.xpath('(//div[@id="currentAttribute"])[1]')
@@ -74,19 +77,13 @@ class Flyer01Spider(CrawlSpider):
                         )
         item['parameters'].append(ai)
         for value in values['content']:
-            if value['attrValueID'] == 0:  # value from popup
-                vi = ValueItem(dict(name=value['valueName'],
-                                    supplier_parameter=value['attrName'],
-                                    data=0,
-                                    supplier_product=item['name'])
-                               )
-            else:                          # value "main"
-                vi = ValueItem(dict(name=value['valueName'],
-                                    supplier_parameter=value['attrName'],
-                                    data=value['attrValueID'],
-                                    supplier_product=item['name'])
-                               )
+            vi = ValueItem(dict(name=value['valueName'],
+                                supplier_parameter=value['attrName'],
+                                data=value['attrValueID'],
+                                supplier_product=item['name'])
+                           )
             ai['values'].append(vi)
+            self.crawler.stats.inc_value('attrs_scraped')
 
         # here the value id is taken from the last value !!
         goNextAttr = response.meta['goNextAttr'] + '/{0}/{1}'.format(

@@ -1,146 +1,44 @@
-"C:\Program Files (x86)\Miniconda2\envs\thomas\python.exe" "C:\Program Files (x86)\JetBrains\PyCharm Community Edition 2016.3.2\helpers\pydev\pydev_run_in_console.py" 58575 58576 "C:/Program Files (x86)/Miniconda2/envs/thomas/Lib/site-packages/scrapy/cmdline.py" crawl flyer01 -s CLOSESPIDER_ITEMCOUNT=200 -s LOG_LEVEL=INFO -s HTTPCACHE_ENABLED=1 -s LOGSTATS_INTERVAL=10
-PyDev console: starting.
-Running C:/Program Files (x86)/Miniconda2/envs/thomas/Lib/site-packages/scrapy/cmdline.py
-2017-07-14 12:00:02 [scrapy.utils.log] INFO: Scrapy 1.4.0 started (bot: flyeralarm)
-2017-07-14 12:00:02 [scrapy.utils.log] INFO: Overridden settings: {'BOT_NAME': 'flyeralarm', 'CLOSESPIDER_ITEMCOUNT': '200', 'CONCURRENT_REQUESTS': 1, 'HTTPCACHE_ENABLED': '1', 'LOGSTATS_INTERVAL': '10', 'LOG_LEVEL': 'INFO', 'NEWSPIDER_MODULE': 'flyeralarm.spiders', 'ROBOTSTXT_OBEY': True, 'SPIDER_MODULES': ['flyeralarm.spiders']}
-2017-07-14 12:00:02 [scrapy.middleware] INFO: Enabled extensions:
-['scrapy.extensions.corestats.CoreStats',
- 'scrapy.extensions.telnet.TelnetConsole',
- 'scrapy.extensions.closespider.CloseSpider',
- 'scrapy.extensions.logstats.LogStats']
-2017-07-14 12:00:02 [scrapy.middleware] INFO: Enabled downloader middlewares:
-['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
- 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
- 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
- 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
- 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
- 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
- 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
- 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
- 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
- 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
- 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
- 'scrapy.downloadermiddlewares.stats.DownloaderStats',
- 'scrapy.downloadermiddlewares.httpcache.HttpCacheMiddleware']
-2017-07-14 12:00:02 [scrapy.middleware] INFO: Enabled spider middlewares:
-['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
- 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
- 'scrapy.spidermiddlewares.referer.RefererMiddleware',
- 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
- 'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2017-07-14 12:00:02 [scrapy.middleware] INFO: Enabled item pipelines:
-[]
-2017-07-14 12:00:02 [scrapy.core.engine] INFO: Spider opened
-2017-07-14 12:00:02 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2017-07-14 12:00:05 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5572/width/0/height/0/1182/5179/1183/5182> (referer: https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5572/width/0/height/0/1182/5179)
-Traceback (most recent call last):
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\twisted\internet\defer.py", line 653, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 65, in parse_details
-    data=values[-1]['attrNameID'],
-IndexError: list index out of range
-2017-07-14 12:00:12 [scrapy.extensions.logstats] INFO: Crawled 175 pages (at 1050 pages/min), scraped 59 items (at 354 items/min)
-2017-07-14 12:00:22 [scrapy.extensions.logstats] INFO: Crawled 217 pages (at 252 pages/min), scraped 72 items (at 78 items/min)
-2017-07-14 12:00:24 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/192/width/0/height/0/858/3547> (referer: https://www.flyeralarm.com/uk/shop/configurator/index/id/192/wooden-stamps-incl-text-plate-and-ink-pad.html)
-Traceback (most recent call last):
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\twisted\internet\defer.py", line 653, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 65, in parse_details
-    data=values[-1]['attrNameID'],
-IndexError: list index out of range
-2017-07-14 12:00:24 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.flyeralarm.com/uk/shop/configurator/index/id/403/plastic-folders-with-elastic-band.html> (referer: https://www.flyeralarm.com/uk/content/index/open/id/2873/presentation-folders.html)
-Traceback (most recent call last):
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\scrapy\utils\defer.py", line 102, in iter_errback
-    yield next(it)
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\scrapy\spidermiddlewares\offsite.py", line 29, in process_spider_output
-    for x in result:
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\scrapy\spidermiddlewares\referer.py", line 339, in <genexpr>
-    return (_set_referer(r) for r in result or ())
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\scrapy\spidermiddlewares\urllength.py", line 37, in <genexpr>
-    return (r for r in result or () if _filter(r))
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\scrapy\spidermiddlewares\depth.py", line 58, in <genexpr>
-    return (r for r in result or () if _filter(r))
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 24, in parse_group
-    yield self.parse_details(response)
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 65, in parse_details
-    data=values[-1]['attrNameID'],
-IndexError: list index out of range
-2017-07-14 12:00:25 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5807/width/0/height/0/2932/15315/2933/15318> (referer: https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5807/width/0/height/0/2932/15315)
-Traceback (most recent call last):
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\twisted\internet\defer.py", line 653, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 65, in parse_details
-    data=values[-1]['attrNameID'],
-IndexError: list index out of range
-2017-07-14 12:00:25 [scrapy.core.scraper] ERROR: Spider error processing <GET https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5770/width/0/height/0/2825/14916/2826/14919> (referer: https://www.flyeralarm.com/uk/shop/configurator/selectattribute/id/5770/width/0/height/0/2825/14916)
-Traceback (most recent call last):
-  File "C:\Program Files (x86)\Miniconda2\envs\thomas\lib\site-packages\twisted\internet\defer.py", line 653, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "C:\Users\danilin\Documents\Dela\G\Pitonizm\thomas\flyeralarm\flyeralarm\spiders\flyer01.py", line 65, in parse_details
-    data=values[-1]['attrNameID'],
-IndexError: list index out of range
-2017-07-14 12:00:32 [scrapy.extensions.logstats] INFO: Crawled 327 pages (at 660 pages/min), scraped 93 items (at 126 items/min)
-2017-07-14 12:00:42 [scrapy.extensions.logstats] INFO: Crawled 348 pages (at 126 pages/min), scraped 99 items (at 36 items/min)
-2017-07-14 12:00:52 [scrapy.extensions.logstats] INFO: Crawled 388 pages (at 240 pages/min), scraped 113 items (at 84 items/min)
-2017-07-14 12:01:02 [scrapy.extensions.logstats] INFO: Crawled 411 pages (at 138 pages/min), scraped 119 items (at 36 items/min)
-2017-07-14 12:01:12 [scrapy.extensions.logstats] INFO: Crawled 426 pages (at 90 pages/min), scraped 122 items (at 18 items/min)
-2017-07-14 12:01:22 [scrapy.extensions.logstats] INFO: Crawled 454 pages (at 168 pages/min), scraped 131 items (at 54 items/min)
-2017-07-14 12:01:32 [scrapy.extensions.logstats] INFO: Crawled 546 pages (at 552 pages/min), scraped 143 items (at 72 items/min)
-2017-07-14 12:01:42 [scrapy.extensions.logstats] INFO: Crawled 564 pages (at 108 pages/min), scraped 147 items (at 24 items/min)
-2017-07-14 12:01:52 [scrapy.extensions.logstats] INFO: Crawled 576 pages (at 72 pages/min), scraped 151 items (at 24 items/min)
-2017-07-14 12:02:02 [scrapy.extensions.logstats] INFO: Crawled 599 pages (at 138 pages/min), scraped 159 items (at 48 items/min)
-2017-07-14 12:02:12 [scrapy.extensions.logstats] INFO: Crawled 659 pages (at 360 pages/min), scraped 175 items (at 96 items/min)
-2017-07-14 12:02:22 [scrapy.extensions.logstats] INFO: Crawled 684 pages (at 150 pages/min), scraped 184 items (at 54 items/min)
-2017-07-14 12:02:31 [scrapy.core.engine] INFO: Closing spider (closespider_itemcount)
-2017-07-14 12:02:31 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 442768,
- 'downloader/request_count': 743,
- 'downloader/request_method_count/GET': 743,
- 'downloader/response_bytes': 14738952,
- 'downloader/response_count': 743,
- 'downloader/response_status_count/200': 736,
- 'downloader/response_status_count/301': 7,
- 'dupefilter/filtered': 42,
- 'finish_reason': 'closespider_itemcount',
- 'finish_time': datetime.datetime(2017, 7, 14, 9, 2, 31, 378336),
- 'httpcache/firsthand': 272,
- 'httpcache/hit': 471,
- 'httpcache/miss': 272,
- 'httpcache/store': 272,
- 'item_scraped_count': 200,
- 'log_count/ERROR': 5,
- 'log_count/INFO': 21,
- 'request_depth_max': 9,
- 'response_received_count': 736,
- 'scheduler/dequeued': 742,
- 'scheduler/dequeued/memory': 742,
- 'scheduler/enqueued': 828,
- 'scheduler/enqueued/memory': 828,
- 'spider_exceptions/IndexError': 5,
- 'start_time': datetime.datetime(2017, 7, 14, 9, 0, 2, 718580)}
-2017-07-14 12:02:31 [scrapy.core.engine] INFO: Spider closed (closespider_itemcount)
-Process finished with exit code 0
+Dear Colleagues,
+I hope you are fine!
+Please find attached the code for Flyeralarm scraper.
+1. The site has 581 product and 4508 attributes (parameters) were scraped
+If you check the product page example:
+https://www.flyeralarm.com/uk/shop/configurator/index/id/6175
+you will see that there are "main" parameters: style, colours, Measuring line and
+"popup" parameters which appear when you place mouse cursor over a parameter
+value. I scraped both.
+For example, for parameter "Style" list of values is the following:
+    {
+    "data": "17947",
+    "name": "basic",
+    "supplier_parameter": "",
+    "supplier_product": "Champagne glasses"
+    },
+    {
+    "data": 0,
+    "name": "16.3 x 5.2 cm",
+    "supplier_parameter": "Print area",
+    "supplier_product": "Champagne glasses"
+    }
+For "main" value "supplier_parameter" is empty, for
+"popup value" "supplier_parameter" is a key and "name" is value.
 
-{'downloader/request_bytes': 1110754,
- 'downloader/request_count': 1832,
- 'downloader/request_method_count/GET': 1832,
- 'downloader/response_bytes': 34832016,
- 'downloader/response_count': 1832,
- 'downloader/response_status_count/200': 1806,
- 'downloader/response_status_count/301': 26,
- 'dupefilter/filtered': 67,
- 'finish_reason': 'closespider_itemcount',
- 'finish_time': datetime.datetime(2017, 7, 16, 6, 23, 47, 809719),
- 'httpcache/firsthand': 1832,
- 'httpcache/miss': 1832,
- 'httpcache/store': 1832,
- 'item_scraped_count': 500,
- 'log_count/INFO': 151,
- 'request_depth_max': 12,
- 'response_received_count': 1806,
- 'scheduler/dequeued': 1831,
- 'scheduler/dequeued/memory': 1831,
- 'scheduler/enqueued': 1839,
- 'scheduler/enqueued/memory': 1839,
- 'start_time': datetime.datetime(2017, 7, 16, 5, 59, 38, 199744)}
-2017-07-16 09:23:47 [scrapy.core.engine] INFO: Spider closed (closespider_itemcount)
+2. As I learned from the saxoprint code sample, the scraper just has to return
+scrapy.Item subclass instances. Please check.
+
+3. What is our strategy regarding prices? From saxoprint code example I
+do not see that Items contain price field.
+Anyway, the prices may (and will in most cases) depend on selected parameters
+configuration. That means that, for example for Voucher booklets:
+https://www.flyeralarm.com/uk/shop/configurator/index/id/5572/
+we will have 2 (format) x 2 (style) x 14 (page count) x 3 (material) =
+= 168 price combinations. Also, every price page contains a lot of rows.
+One approach could be, to scrape all combinations nevertheless and hold them
+somewhere in database backend. But this requires to run update scrapes from time
+to time.
+Another approach is to download prices "on demand" when user select some
+combination online.
+How to deal with this issue?
+
+Best regards,
+Yury
