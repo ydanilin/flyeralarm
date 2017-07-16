@@ -120,3 +120,27 @@ IndexError: list index out of range
  'start_time': datetime.datetime(2017, 7, 14, 9, 0, 2, 718580)}
 2017-07-14 12:02:31 [scrapy.core.engine] INFO: Spider closed (closespider_itemcount)
 Process finished with exit code 0
+
+{'downloader/request_bytes': 1110754,
+ 'downloader/request_count': 1832,
+ 'downloader/request_method_count/GET': 1832,
+ 'downloader/response_bytes': 34832016,
+ 'downloader/response_count': 1832,
+ 'downloader/response_status_count/200': 1806,
+ 'downloader/response_status_count/301': 26,
+ 'dupefilter/filtered': 67,
+ 'finish_reason': 'closespider_itemcount',
+ 'finish_time': datetime.datetime(2017, 7, 16, 6, 23, 47, 809719),
+ 'httpcache/firsthand': 1832,
+ 'httpcache/miss': 1832,
+ 'httpcache/store': 1832,
+ 'item_scraped_count': 500,
+ 'log_count/INFO': 151,
+ 'request_depth_max': 12,
+ 'response_received_count': 1806,
+ 'scheduler/dequeued': 1831,
+ 'scheduler/dequeued/memory': 1831,
+ 'scheduler/enqueued': 1839,
+ 'scheduler/enqueued/memory': 1839,
+ 'start_time': datetime.datetime(2017, 7, 16, 5, 59, 38, 199744)}
+2017-07-16 09:23:47 [scrapy.core.engine] INFO: Spider closed (closespider_itemcount)

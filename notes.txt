@@ -32,3 +32,9 @@ how to control if repeated attributes
 -s LOGSTATS_INTERVAL=10       # provide progress message every X seconds
 
 parse --spider=<name> -c <callback name> -d <depth?> <url to parse>
+
+Online regex tester:
+https://regex101.com/#python
+
+Error at:
+https://www.flyeralarm.com/uk/shop/configurator/index/id/5633

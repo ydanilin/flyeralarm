@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import json
+from functools import reduce
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
@@ -41,8 +42,13 @@ class Flyer01Spider(CrawlSpider):
                 './text()').extract_first().strip()
             url = response.url
             sku = re.search(r'\d+', url)
-            item = ProductItem(dict(name=name, URL=url, data=sku.group(),
-                                    parameters=[]))
+            item = ProductItem(dict(name=name,
+                                    caption=name,
+                                    supplier='Flyeralarm',
+                                    URL=url,
+                                    data=sku.group(),
+                                    parameters=[])
+                               )
             response.meta['goNextAttr'] = ('/uk/shop/configurator'
                                            '/selectattribute'
                                            '/id/{0}/width/0/height/0').format(
@@ -56,23 +62,35 @@ class Flyer01Spider(CrawlSpider):
 
         # common part for both types of calls
         cAttrDiv = replacedResp.xpath('(//div[@id="currentAttribute"])[1]')
-        if not cAttrDiv:  # termination condition
+        values = self.parseAttributeValues(replacedResp)
+        if (not cAttrDiv) or (not values['content']):  # termination condition
             return item
             # return
-        values = self.parseAttributeValues(replacedResp)
         aName = self.parseAttributeName(cAttrDiv)
         ai = AttribItem(dict(name=aName,
-                             data=values[-1]['attrNameID'],
-                             values=[]))
+                             data=values['aid'],
+                             supplier_product=item['name'],
+                             values=[])
+                        )
         item['parameters'].append(ai)
-        for value in values:
-            vi = ValueItem(dict(name=value['valueName'],
-                                data=value['attrValueID'])
-                           )
+        for value in values['content']:
+            if value['attrValueID'] == 0:  # value from popup
+                vi = ValueItem(dict(name=value['valueName'],
+                                    supplier_parameter=value['attrName'],
+                                    data=0,
+                                    supplier_product=item['name'])
+                               )
+            else:                          # value "main"
+                vi = ValueItem(dict(name=value['valueName'],
+                                    supplier_parameter=value['attrName'],
+                                    data=value['attrValueID'],
+                                    supplier_product=item['name'])
+                               )
             ai['values'].append(vi)
+
         # here the value id is taken from the last value !!
         goNextAttr = response.meta['goNextAttr'] + '/{0}/{1}'.format(
-            ai['data'], vi['data'])
+            values['aid'], values['vid'])
         request = scrapy.Request(response.urljoin(goNextAttr),
                                  callback=self.parse_details)
         request.meta['item'] = item
@@ -82,12 +100,14 @@ class Flyer01Spider(CrawlSpider):
         # inspect_response(response, self)
 
     def parseAttributeValues(self, response):
-        output = []
+        output = dict(aid=0, vid=0, content=[])
         valueDivs = []
         containerDiv = response.xpath('//div[@id = "attributeValues"]')
         if containerDiv:
-            # every value block may be of class either "attributeValueContainer"
-            # of "attributeValueList"
+            # every value block may be of class:
+            # either "attributeValueContainer"
+            # or "attributeValueList"
+            # or "attributeValueTable"
             # also value text div class depends on it
             tryRecordClass = containerDiv.css('div.attributeValueContainer')
             if tryRecordClass:
@@ -98,19 +118,43 @@ class Flyer01Spider(CrawlSpider):
                 if tryRecordClass:
                     valueDivs = tryRecordClass
                     valueTextClassName = "attributeValueListNameText"
+                else:
+                    tryRecordClass = containerDiv.css('div.attributeValueTable')
+                    if tryRecordClass:
+                        valueDivs = tryRecordClass
+                        valueTextClassName = "attributeValueTableName"
 
             for valueDiv in valueDivs:
-                valueName = valueDiv.xpath('.//div[@class = $var]/text()',
-                                           var=valueTextClassName).\
-                    extract_first().strip()
+                valueName = valueDiv.xpath('.//div[@class = $var]//text()',
+                                           var=valueTextClassName).extract()
+                valueName = reduce(lambda x, y: x + y, valueName).strip()
                 jsProcName = valueDiv.xpath(
                     ('.//div[contains(@onclick, "selectShoppingCartAttribute")]'
                      '/@onclick')).extract_first()
                 jsProcArgs = re.findall("\d+", jsProcName)
-                output.append(dict(sku=jsProcArgs[0],
-                                   attrNameID=jsProcArgs[1],
-                                   attrValueID=jsProcArgs[2],
-                                   valueName=valueName))
+                output['aid'] = jsProcArgs[1]
+                output['vid'] = jsProcArgs[2]
+                output['content'].append(dict(sku=jsProcArgs[0],
+                                              attrNameID=jsProcArgs[1],
+                                              attrValueID=jsProcArgs[2],
+                                              attrName='',
+                                              valueName=valueName))
+                # go for popup technical details if any
+                id_ = 'attributeValueTechnicalDetail' + jsProcArgs[2]
+                popupDiv = valueDiv.xpath('.//preceding-sibling::div[@id = $var]', var=id_)
+                if popupDiv:
+                    pairs = popupDiv.xpath('.//text()').extract()
+                    pairs = list(filter(lambda x: x, map(lambda x: x.strip(), pairs)))
+                    for pair in pairs:
+                        nameAndValue = re.split(r':\s?', pair)
+                        if len(nameAndValue) == 2:
+                            output['content'].append(
+                                dict(sku=jsProcArgs[0],
+                                     attrNameID=0,
+                                     attrValueID=0,
+                                     attrName=nameAndValue[0],
+                                     valueName=nameAndValue[1]))
+
         return output
 
     def parseAttributeName(self, aTag):

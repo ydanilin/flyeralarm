@@ -1,55 +1,146 @@
 [
   {
     "URL": "https://www.flyeralarm.com/uk/shop/configurator/index/id/6175",
+    "caption": "Champagne glasses",
     "data": "6175",
     "name": "Champagne glasses",
     "parameters": [
       {
         "data": "3556",
         "name": "Style",
+        "supplier_product": "Champagne glasses",
         "values": [
           {
             "data": "17947",
-            "name": "basic"
+            "name": "basic",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "16.3 x 5.2 cm",
+            "supplier_parameter": "Print area",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "15 cl",
+            "supplier_parameter": "Capacity",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "54 mm",
+            "supplier_parameter": "Diameter",
+            "supplier_product": "Champagne glasses"
           },
           {
             "data": "17951",
-            "name": "standard"
+            "name": "standard",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": " 17.6 x 6.5 cm",
+            "supplier_parameter": "Print area",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "21 cl",
+            "supplier_parameter": "Capacity",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "63 mm",
+            "supplier_parameter": "Diameter",
+            "supplier_product": "Champagne glasses"
           },
           {
             "data": "17952",
-            "name": "modern"
+            "name": "modern",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "16.8 x 6.5 cm",
+            "supplier_parameter": "Print area",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "22 cl",
+            "supplier_parameter": "Capacity",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "57 mm",
+            "supplier_parameter": "Diameter",
+            "supplier_product": "Champagne glasses"
           },
           {
             "data": "17953",
-            "name": "premium"
+            "name": "premium",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "17.2 x 7 cm",
+            "supplier_parameter": "Print area",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "21 cl",
+            "supplier_parameter": "Capacity",
+            "supplier_product": "Champagne glasses"
+          },
+          {
+            "data": 0,
+            "name": "60 mm",
+            "supplier_parameter": "Diameter",
+            "supplier_product": "Champagne glasses"
           }
         ]
       },
       {
         "data": "3557",
         "name": "Number of Colours",
+        "supplier_product": "Champagne glasses",
         "values": [
           {
             "data": "17948",
-            "name": "1 colour"
+            "name": "1 colour",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
           }
         ]
       },
       {
         "data": "3558",
         "name": "Measuring Line",
+        "supplier_product": "Champagne glasses",
         "values": [
           {
             "data": "17949",
-            "name": "without measuring line"
+            "name": "without measuring line",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
           },
           {
             "data": "17950",
-            "name": "0.1 l"
+            "name": "0.1 l",
+            "supplier_parameter": "",
+            "supplier_product": "Champagne glasses"
           }
         ]
       }
-    ]
+    ],
+    "supplier": "Flyeralarm"
   }
 ]
