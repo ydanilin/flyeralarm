@@ -27,6 +27,7 @@ attributeValueListNameText
 how to control if repeated attributes
 
 -s CLOSESPIDER_ITEMCOUNT=200  # maximum items
+-s CLOSESPIDER_PAGECOUNT=50   # maximum pages
 -s LOG_LEVEL=INFO             # supress escessive verbosity
 -s HTTPCACHE_ENABLED=1        # save in local cache - useful for next runs!
 -s LOGSTATS_INTERVAL=10       # provide progress message every X seconds
